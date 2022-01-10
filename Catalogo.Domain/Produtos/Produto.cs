@@ -34,6 +34,4 @@ namespace Catalogo.Domain.Produtos
             return new Produto(codigo, nome, frete, descricao, preco, categoria);
         }
     }
-
-   
 }
