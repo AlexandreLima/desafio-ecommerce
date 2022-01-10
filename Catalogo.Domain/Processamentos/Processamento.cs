@@ -1,6 +1,7 @@
 ﻿using Catalogo.Domain.Produtos;
 using CSharpFunctionalExtensions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,18 +10,22 @@ namespace Catalogo.Domain.Processamentos
 {
     public class Processamento
     {
-        private Processamento()
+
+        private Arquivo arquivo;
+        private readonly FileStream stream;
+
+        public Processamento(FileStream stream)
         {
             Id = new Guid();
             FaseProcessamento = FaseProcessamentoEnum.NaoIniciado;
+            this.stream = stream;
         }
 
         public Guid Id { get; private set; }
         public DateTime DataInicio { get; private set; }
         public DateTime DataFim { get; private set; }
         public FaseProcessamentoEnum FaseProcessamento { get; private set; }
-        private Arquivo arquivo;
-        public async Task<Result<IList<Produto>>> Iniciar(FileStream stream)
+        public async Task<Result<IList<Produto>>> Iniciar()
         {
             DataInicio = DateTime.Now;
             arquivo = new Planilha(stream, stream.Name);
