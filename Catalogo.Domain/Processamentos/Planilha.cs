@@ -47,6 +47,13 @@ namespace Catalogo.Domain.Processamentos
 
                         var produtoResult = ConverterColunasEmProduto(colunas, total);
 
+                        if (produtoResult.IsFailure)
+                        {
+                            //TODO: Logar que não foi possível conversão do produto na linha {total}
+                        }
+                        else
+                            produtos.Add(produtoResult.Value);
+
                         total++;
                     }
                 }

@@ -1,4 +1,5 @@
 ﻿using Catalogo.Domain.Processamentos.Repositorios;
+using Catalogo.Domain.Produtos.Respositorios;
 using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Concurrent;
@@ -13,12 +14,14 @@ namespace Catalogo.Domain.Processamentos.Serviços
         private readonly ConcurrentQueue<Processamento> processamentos;
         private readonly SemaphoreSlim semaphoreSlim;
         private readonly IProcessamentoRespositorio processamentoRepositorio;
+        private readonly IProdutoRespositorio produtoRespositorio;
 
-        public ProcessamentoServicoDominio(ConcurrentQueue<Processamento> processamentos, SemaphoreSlim semaphoreSlim, IProcessamentoRespositorio processamentoRepositorio)
+        public ProcessamentoServicoDominio(ConcurrentQueue<Processamento> processamentos, SemaphoreSlim semaphoreSlim, IProcessamentoRespositorio processamentoRepositorio, IProdutoRespositorio produtoRespositorio)
         {
             this.processamentos = processamentos;
             this.semaphoreSlim = semaphoreSlim;
             this.processamentoRepositorio = processamentoRepositorio;
+            this.produtoRespositorio = produtoRespositorio;
         }
 
         public async Task<Result<Guid>> ProcessarArquivo(FileStream fileStream)
@@ -45,11 +48,38 @@ namespace Catalogo.Domain.Processamentos.Serviços
                 {
                     Processamento processamento;
                     var resultado = processamentos.TryDequeue(out processamento);
-
+                     
                     if (resultado)
                     {
-                        var produtos = await processamento.Iniciar();
-                        //TODO: Salvar os produtos
+                        var produtosResult = await processamento.Iniciar();
+                        await processamentoRepositorio.Salvar(processamento);
+
+                        if (!produtosResult.IsFailure)
+                        {
+                            ParallelOptions parallelOptions = 
+                                new ParallelOptions 
+                                { 
+                                    CancellationToken = new CancellationTokenSource(new TimeSpan(0, 3, 0)).Token,
+                                    MaxDegreeOfParallelism = 4
+                                };
+                            
+                            Parallel.ForEach(produtosResult.Value, parallelOptions, async (prod) =>
+                            {
+                                try
+                                {
+                                    await produtoRespositorio.Salvar(prod);
+                                }
+                                catch (Exception e)
+                                {
+                                    // TODO: Log caso dê algo errado no paralelismo
+                                }
+                            });
+
+                            processamento.Finalizar();
+                            await processamentoRepositorio.Salvar(processamento);
+                        }
+                        else 
+                        { }
                     }
                 }
             }
