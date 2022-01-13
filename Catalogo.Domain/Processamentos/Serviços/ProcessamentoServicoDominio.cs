@@ -24,21 +24,21 @@ namespace Catalogo.Domain.Processamentos.Serviços
             this.produtoRespositorio = produtoRespositorio;
         }
 
-        public async Task<Result<Guid>> ProcessarArquivo(FileStream fileStream)
+        public async Task<Result<Guid>> ProcessarArquivo(FileStream fileStream, CancellationToken cancellationToken)
         {
             Processamento processamento = new Processamento(fileStream);
-            await processamentoRepositorio.Salvar(processamento);
+            await processamentoRepositorio.Salvar(processamento, cancellationToken);
 
             Task.Run(async () => 
             {
                 processamentos.Enqueue(processamento);
-                await ExecutarEnfileiramento();
+                await ExecutarEnfileiramento(cancellationToken);
             });
 
             return processamento.Id;
         }
 
-        private async Task ExecutarEnfileiramento() 
+        private async Task ExecutarEnfileiramento(CancellationToken cancellationToken) 
         {
             await semaphoreSlim.WaitAsync();
 
@@ -52,7 +52,7 @@ namespace Catalogo.Domain.Processamentos.Serviços
                     if (resultado)
                     {
                         var produtosResult = await processamento.Iniciar();
-                        await processamentoRepositorio.Salvar(processamento);
+                        await processamentoRepositorio.Salvar(processamento, cancellationToken);
 
                         if (!produtosResult.IsFailure)
                         {
@@ -67,7 +67,7 @@ namespace Catalogo.Domain.Processamentos.Serviços
                             {
                                 try
                                 {
-                                    await produtoRespositorio.Salvar(prod);
+                                    await produtoRespositorio.Salvar(prod, parallelOptions.CancellationToken);
                                 }
                                 catch (Exception e)
                                 {
@@ -76,7 +76,7 @@ namespace Catalogo.Domain.Processamentos.Serviços
                             });
 
                             processamento.Finalizar();
-                            await processamentoRepositorio.Salvar(processamento);
+                            await processamentoRepositorio.Salvar(processamento, cancellationToken);
                         }
                         else 
                         { }
@@ -93,14 +93,14 @@ namespace Catalogo.Domain.Processamentos.Serviços
             }
         }
 
-        public async Task<Result> SalvarProcessamento(Processamento processamento) 
+        public async Task<Result> SalvarProcessamento(Processamento processamento, CancellationToken cancellationToken) 
         {
-            return await processamentoRepositorio.Salvar(processamento);
+            return await processamentoRepositorio.Salvar(processamento, cancellationToken);
         }
 
-        public async Task<Result> AlterarProcessamento(Processamento processamento)
+        public async Task<Result> AlterarProcessamento(Processamento processamento, CancellationToken cancellationToken)
         {
-            return await processamentoRepositorio.Alterar(processamento);
+            return await processamentoRepositorio.Alterar(processamento, cancellationToken);
         }
     }
 }

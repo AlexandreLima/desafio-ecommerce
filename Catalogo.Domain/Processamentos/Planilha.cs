@@ -70,14 +70,19 @@ namespace Catalogo.Domain.Processamentos
         {
             try
             {
-                var codigoProduto = colunas[MapeamentoColunas.CODIGOPRODUTO].Convert<int>();
+                var codigoProdutoResult = MapeamentoColunas.ConverterColunaEm<int>(colunas[MapeamentoColunas.CODIGOPRODUTO], $"Não foi possível obter código do Produto na linha {linhaAtual}");
                 var nome = colunas[MapeamentoColunas.NOME];
-                var frete = colunas[MapeamentoColunas.TIPOFRETE].Convert<bool>();
+                var freteResult = MapeamentoColunas.ConverterColunaEm<bool>(colunas[MapeamentoColunas.TIPOFRETE], $"Não foi possível obter frete do Produto na linha {linhaAtual}");
                 var descricao = colunas[MapeamentoColunas.DESCRICAO];
-                var preco = colunas[MapeamentoColunas.PRECO].Convert<double>();
+                var precoResult = MapeamentoColunas.ConverterColunaEm<double>(colunas[MapeamentoColunas.PRECO], $"Não foi possível obter o preço do Produto na linha {linhaAtual}");
                 var categoria = colunas[MapeamentoColunas.CATEGORIA];
 
-                return ProdutoFabrica.Criar(codigoProduto, nome, frete, descricao, preco, categoria);
+                var erroResult = Result.Combine(";", codigoProdutoResult, freteResult, precoResult);
+
+                if (erroResult.IsFailure)
+                   return Result.Failure<Produto>(erroResult.Error);
+
+                return ProdutoFabrica.Criar(codigoProdutoResult.Value, nome, freteResult.Value, descricao, precoResult.Value, categoria);
             }
             catch (Exception e)
             {
@@ -95,11 +100,11 @@ namespace Catalogo.Domain.Processamentos
             public static readonly int CATEGORIA = 5;
             public static readonly int TOTALCOLUNAS = 6;
 
-            public static Result<T> ConverterColunaEm<T>(string[] colunas, int indice, string mensagemErro)
+            public static Result<T> ConverterColunaEm<T>(string coluna, string mensagemErro)
             {
                 try
                 {
-                    var resultado = colunas[indice].Convert<T>();
+                    var resultado = coluna.Convert<T>();
 
                     if (resultado == null)
                         return Result.Failure<T>(mensagemErro);

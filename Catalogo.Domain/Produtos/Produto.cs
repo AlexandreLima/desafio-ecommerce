@@ -13,6 +13,7 @@ namespace Catalogo.Domain.Produtos
             Preco = preco;
             Descricao = descricao;
             Categoria = categoria;
+            Id = Guid.NewGuid();
         }
 
         public Guid Id { get; private set; }

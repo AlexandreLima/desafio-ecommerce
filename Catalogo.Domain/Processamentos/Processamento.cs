@@ -1,7 +1,6 @@
 ﻿using Catalogo.Domain.Produtos;
 using CSharpFunctionalExtensions;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -25,6 +24,7 @@ namespace Catalogo.Domain.Processamentos
         public DateTime DataInicio { get; private set; }
         public DateTime DataFim { get; private set; }
         public FaseProcessamentoEnum FaseProcessamento { get; private set; }
+
         public async Task<Result<IList<Produto>>> Iniciar()
         {
             DataInicio = DateTime.Now;
@@ -33,6 +33,7 @@ namespace Catalogo.Domain.Processamentos
 
             return  await arquivo.GerarProdutos();
         }
+
         public Result Finalizar() 
         {
             if (FaseProcessamento == FaseProcessamentoEnum.Finalizado)
