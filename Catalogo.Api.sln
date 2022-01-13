@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalogo.Domain", "Catalogo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Application", "Catalogo.Application\Catalogo.Application.csproj", "{D3BFADF3-5410-43C0-9AA7-308C865BFBE0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testes", "Testes", "{130F30E2-75D7-4A75-99A6-D8210BC0F9A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.TestesUnitarios", "Catalogo.TestesUnitarios\Catalogo.TestesUnitarios.csproj", "{313F1917-D17D-433B-BEC8-50C31945CB58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,16 @@ Global
 		{D3BFADF3-5410-43C0-9AA7-308C865BFBE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3BFADF3-5410-43C0-9AA7-308C865BFBE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3BFADF3-5410-43C0-9AA7-308C865BFBE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313F1917-D17D-433B-BEC8-50C31945CB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313F1917-D17D-433B-BEC8-50C31945CB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{313F1917-D17D-433B-BEC8-50C31945CB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{313F1917-D17D-433B-BEC8-50C31945CB58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{313F1917-D17D-433B-BEC8-50C31945CB58} = {130F30E2-75D7-4A75-99A6-D8210BC0F9A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90F52054-9B6E-4A15-84D3-15DDEC66D84B}
