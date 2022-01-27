@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -21,14 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dominio\Produtos\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Catalogo.Api\Catalogo.Api.csproj" />
-    <ProjectReference Include="..\Catalogo.Application\Catalogo.Application.csproj" />
-    <ProjectReference Include="..\Catalogo.Domain\Catalogo.Domain.csproj" />
-    <ProjectReference Include="..\Catalogo.Testes.Utilitarios\Catalogo.Testes.Utilitarios.csproj" />
+    <None Update="products.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

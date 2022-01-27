@@ -13,6 +13,7 @@ namespace Catalogo.Domain.Processamentos
         public Arquivo(Stream stream, string nome)
         {
             this.stream = stream ?? throw new System.ArgumentNullException(nameof(stream));
+            Nome = nome;
         }
 
         public string Nome { get; private set; }

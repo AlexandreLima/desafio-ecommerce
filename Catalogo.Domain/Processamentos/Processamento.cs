@@ -9,7 +9,6 @@ namespace Catalogo.Domain.Processamentos
 {
     public class Processamento
     {
-
         private Arquivo arquivo;
         private readonly FileStream stream;
 
