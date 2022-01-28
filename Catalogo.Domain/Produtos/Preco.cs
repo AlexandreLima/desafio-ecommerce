@@ -4,13 +4,16 @@ namespace Catalogo.Domain.Produtos
 {
     public class Preco
     {
-        private Preco(double valor) { }
-
-        public double Valor { get; set; }
-
-        public static Result<Preco> Criar(double preco)
+        private Preco(decimal valor) 
         {
-            if (double.IsPositiveInfinity(preco))
+            Valor = valor;
+        }
+
+        public decimal Valor { get; set; }
+
+        public static Result<Preco> Criar(decimal preco)
+        {
+            if (decimal.Zero > preco)
                 return Result.Failure<Preco>("Preço do produto deve ser positivo.");
 
             return new Preco(preco);

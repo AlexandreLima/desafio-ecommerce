@@ -18,6 +18,13 @@ namespace Catalogo.Domain.Extensoes
 
         public static T Convert<T>(this object value)
         {
+            if (typeof(T) == typeof(bool) && value.GetType() == typeof(string))
+            {
+                int booleanValue = int.Parse((string)value);
+
+                return (T)booleanValue.Convert(typeof(T));
+            }
+
             return (T)value.Convert(typeof(T));
         }
     }

@@ -5,7 +5,7 @@ namespace Catalogo.Domain.Produtos.Fabrica
 {
     public class ProdutoFabrica
     {
-        public static Result<Produto> Criar(int codigo, string nome, bool frete, string descricao, double preco, string categoria)
+        public static Result<Produto> Criar(int codigo, string nome, bool frete, string descricao, decimal preco, string categoria)
         {
             var categoriaResult = Categoria.Criar(categoria);
             var precoResult = Preco.Criar(preco);

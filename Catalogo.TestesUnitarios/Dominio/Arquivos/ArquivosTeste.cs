@@ -28,7 +28,19 @@ namespace Catalogo.TestesUnitarios.Dominio.Arquivos
         {
             var arquivo = new Planilha(arquivoCsv, arquivoCsv.Name);
             var resultado = await arquivo.GerarProdutos();
-           
+
+            resultado.IsSuccess.Should().BeTrue();
+            resultado.Value.Count.Should().Be(6);
+        }
+
+        [Fact(DisplayName = "Arquivo não pode ser lido.")]
+        public async Task GerarArquivosVazio()
+        {
+            var arquivo = new Planilha(FileStream.Null, arquivoCsv.Name);
+            var resultado = await arquivo.GerarProdutos();
+
+            resultado.IsSuccess.Should().BeFalse();
+            resultado.Error.Should().Be("Arquivo não pode ser lido.");
         }
     }
 }

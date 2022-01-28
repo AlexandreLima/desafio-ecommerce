@@ -22,6 +22,9 @@ namespace Catalogo.Domain.Processamentos
             var produtos = new List<Produto>();
             var total = 0;
 
+            if (stream.Length == 0)
+                return Result.Failure<IList<Produto>>($"Arquivo não pode ser lido.");
+
             try
             {
                 using (var streaReader = new StreamReader(this.stream))
@@ -74,7 +77,7 @@ namespace Catalogo.Domain.Processamentos
                 var nome = colunas[MapeamentoColunas.NOME];
                 var freteResult = MapeamentoColunas.ConverterColunaEm<bool>(colunas[MapeamentoColunas.TIPOFRETE], $"Não foi possível obter frete do Produto na linha {linhaAtual}");
                 var descricao = colunas[MapeamentoColunas.DESCRICAO];
-                var precoResult = MapeamentoColunas.ConverterColunaEm<double>(colunas[MapeamentoColunas.PRECO], $"Não foi possível obter o preço do Produto na linha {linhaAtual}");
+                var precoResult = MapeamentoColunas.ConverterColunaEm<decimal>(colunas[MapeamentoColunas.PRECO].Replace(".", ","), $"Não foi possível obter o preço do Produto na linha {linhaAtual}");
                 var categoria = colunas[MapeamentoColunas.CATEGORIA];
 
                 var erroResult = Result.Combine(";", codigoProdutoResult, freteResult, precoResult);
